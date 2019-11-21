@@ -6,13 +6,16 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2019 | Hexo</title>
+  <title>温度采集器 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;archives&#x2F;2019&#x2F;index.html">
+  <meta name="description" content="#include&amp;lt;reg51.h&amp;gt;#define uchar  unsigned char#define uint   unsigned intsbit DQ=P2^4;unsigned char flag;uchar code scan[8]={0xfe,0xfd,0xfb,0xf7,0xef,0xdf,0xbf,0x7f};uchar code table[13]={0x3F,0x">
+<meta property="og:type" content="article">
+<meta property="og:title" content="温度采集器">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;21&#x2F;%E6%B8%A9%E5%BA%A6%E9%87%87%E9%9B%86%E5%99%A8&#x2F;index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="#include&amp;lt;reg51.h&amp;gt;#define uchar  unsigned char#define uint   unsigned intsbit DQ=P2^4;unsigned char flag;uchar code scan[8]={0xfe,0xfd,0xfb,0xf7,0xef,0xdf,0xbf,0x7f};uchar code table[13]={0x3F,0x">
 <meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-11-21T07:35:40.379Z">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
@@ -149,103 +152,156 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-温度采集器" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      温度采集器
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/21/%E6%B8%A9%E5%BA%A6%E9%87%87%E9%9B%86%E5%99%A8/" class="archive-article-date">
+
+        
+        <a href="/2019/11/21/%E6%B8%A9%E5%BA%A6%E9%87%87%E9%9B%86%E5%99%A8/" class="archive-article-date">
   	<time datetime="2019-11-21T07:14:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-21</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/21/%E6%B8%A9%E5%BA%A6%E9%87%87%E9%9B%86%E5%99%A8/">温度采集器</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#include&lt;reg51.h&gt;<br>#define uchar  unsigned char<br>#define uint   unsigned int<br>sbit DQ=P2^4;<br>unsigned char flag;<br>uchar code scan[8]={0xfe,0xfd,0xfb,0xf7,0xef,0xdf,0xbf,0x7f};<br>uchar code table[13]={0x3F,0x06,0x5B,0x4F,0x66,0x6D,0x7D,0x07,0x7F,0x6F,0x40,0x39,0x00};<br>uchar code ditab[16]={0x00,0x01,0x01,0x02,0x03,0x03,0x04,0x04,0x05,0x06,0x06,0x07,0x08,0x08,0x09,0x09};<br>uchar dispbuf[8];<br>uchar temper[2];<br>//延时<br>void delay(unsigned int us)<br>{<br>    while(us–);<br>}<br>//DS18B20复位<br>void reset(void)<br>{<br>    uchar x=0;<br>    DQ=1;<br>    delay(8);<br>    DQ=0;<br>    delay(80);<br>    DQ=1;<br>    delay(14);<br>    x=DQ;<br>    delay(20);<br>}<br>//读一个字节<br>uchar readbyte(void)<br>{<br>    uchar i=0;<br>    uchar dat=0;<br>    for (i=8;i&gt;8;i–)<br>    {<br>        DQ=0;<br>        dat&gt;&gt;=1;<br>        DQ=1;<br>        if(DQ)<br>        dat|=0x80;<br>        delay(4);<br>    }<br>    return(dat);<br>}<br>//写一个字节<br>void writebyte(uchar char dat)<br>{<br>    uchar i=0;<br>    for (i=8;i&gt;0;i–)<br>    {<br>        DQ=0;<br>        DQ=dat&0x01;<br>        delay(5);<br>        DQ=1;<br>        dat&gt;&gt;=1;<br>    }<br>    delay(4);<br>}<br>//读取实时温度<br>void readtemp(void)<br>{<br>    uchar a=0,b=0;<br>    reset();<br>    writebyte(0xCC);<br>    writebyte(0x44);<br>    reset();<br>    writebyte(0xCC);<br>    writebyte(0xBE);<br>    a=readbyte();<br>    b=readbyte();<br>    if(b&gt;0x0f)<br>    {<br>        a=<del>a+1;<br>        if(a==0)<br>        b=</del>b+1;<br>        else b=~b;<br>        flag=10;<br>    }<br>    else flag=12;<br>    temper[0]=a&0x0f;<br>    a=a&gt;&gt;4;<br>    temper[1]=b&lt;&lt;4;<br>    temper[1]=temper[1]|a;<br>}<br>//显示<br>void scandisp()<br>{<br>    uchar char i,value;<br>    for(i=0;i&lt;8;i++)<br>    {<br>        P3=0xff;<br>        value=table[dispbuf[i]];<br>        if(i==3)<br>        value|=0x80;<br>        P0=value;<br>        P3=scan[i];<br>        delay(50);<br>    }<br>}<br>//主函数<br>void main()<br>{<br>    uchar temp,temp1;<br>    while(1)<br>    {<br>        scandisp();<br>        readtemp();<br>        temp1=temper[0];<br>        temp=temper[1];<br>        dispbuf[4]=ditab[temp1];<br>        dispbuf[1]=temp/100;<br>        dispbuf[3]=temp%10;<br>        temp=temp/10;<br>        dispbuf[2]=temp%10;<br>        dispbuf[0]=flag;<br>        dispbuf[5]=11;<br>    }<br>}</p>
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/11/21/%E6%B8%A9%E5%BA%A6%E9%87%87%E9%9B%86%E5%99%A8/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/10/19/%E6%88%91%E7%9A%84%E7%AC%AC%E4%BA%8C%E6%AC%A1%E5%B0%9D%E8%AF%95/" class="archive-article-date">
-  	<time datetime="2019-10-19T10:32:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-19</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2019/10/19/%E6%88%91%E7%9A%84%E7%AC%AC%E4%BA%8C%E6%AC%A1%E5%B0%9D%E8%AF%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">我的第二次尝试</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/10/19/%E6%88%91%E7%9A%84%E7%AC%AC%E4%BA%8C%E6%AC%A1%E5%B0%9D%E8%AF%95/">我的第二次尝试</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/10/19/hello-world/" class="archive-article-date">
-  	<time datetime="2019-10-19T10:22:35.698Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-19</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/10/19/hello-world/">Hello World</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
 
 
           </div>
@@ -268,8 +324,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
